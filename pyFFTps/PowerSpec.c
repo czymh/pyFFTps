@@ -2614,7 +2614,7 @@ static const char __pyx_k_Incompatible_checksums_s_vs_0xb0[] = "Incompatible che
 static const char __pyx_k_Indirect_dimensions_not_supporte[] = "Indirect dimensions not supported";
 static const char __pyx_k_Invalid_mode_expected_c_or_fortr[] = "Invalid mode, expected 'c' or 'fortran', got %s";
 static const char __pyx_k_Out_of_bounds_on_buffer_access_a[] = "Out of bounds on buffer access (axis %d)";
-static const char __pyx_k_Subtracting_shotnoise_from_the_f[] = "Subtracting shotnoise from the field";
+static const char __pyx_k_Subtracting_shotnoise_from_the_f[] = "Subtracting shotnoise from the field in the interlaced case.";
 static const char __pyx_k_Unable_to_convert_item_to_object[] = "Unable to convert item to object";
 static const char __pyx_k_got_differing_extents_in_dimensi[] = "got differing extents in dimension %d (got %d and %d)";
 static const char __pyx_k_no_default___reduce___due_to_non[] = "no default __reduce__ due to non-trivial __cinit__";
@@ -2928,7 +2928,6 @@ static PyObject *__pyx_int_2;
 static PyObject *__pyx_int_3;
 static PyObject *__pyx_int_4;
 static PyObject *__pyx_int_8;
-static PyObject *__pyx_int_10;
 static PyObject *__pyx_int_184977713;
 static PyObject *__pyx_int_neg_1;
 static PyObject *__pyx_tuple_;
@@ -7842,7 +7841,7 @@ static PyObject *__pyx_pf_7pyFFTps_9PowerSpec_32IFFT2Dr_d(CYTHON_UNUSED PyObject
  * @cython.wraparound(False)
  * def Pk1D(delta,BoxSize,MAS='CIC',threads=1, verbose=True,             # <<<<<<<<<<<<<<
  *          SNFlag=False, numeff=1.0, interlaced=False,
- *          kmin=0.0, kmax=None, kbin=10):
+ *          kmin=0.0, kmax=None, kbin=None):
  */
 
 /* Python wrapper */
@@ -7877,7 +7876,7 @@ static PyObject *__pyx_pw_7pyFFTps_9PowerSpec_35Pk1D(PyObject *__pyx_self, PyObj
  * @cython.wraparound(False)
  * def Pk1D(delta,BoxSize,MAS='CIC',threads=1, verbose=True,
  *          SNFlag=False, numeff=1.0, interlaced=False,             # <<<<<<<<<<<<<<
- *          kmin=0.0, kmax=None, kbin=10):
+ *          kmin=0.0, kmax=None, kbin=None):
  *     start = time.time()
  */
     values[5] = ((PyObject *)Py_False);
@@ -7888,12 +7887,12 @@ static PyObject *__pyx_pw_7pyFFTps_9PowerSpec_35Pk1D(PyObject *__pyx_self, PyObj
     /* "pyFFTps/PowerSpec.pyx":249
  * def Pk1D(delta,BoxSize,MAS='CIC',threads=1, verbose=True,
  *          SNFlag=False, numeff=1.0, interlaced=False,
- *          kmin=0.0, kmax=None, kbin=10):             # <<<<<<<<<<<<<<
+ *          kmin=0.0, kmax=None, kbin=None):             # <<<<<<<<<<<<<<
  *     start = time.time()
  *     cdef int kxx, kyy, kzz, kx, ky, kz,dims, middle, k_index, MAS_index, SN_index
  */
     values[9] = ((PyObject *)Py_None);
-    values[10] = ((PyObject *)__pyx_int_10);
+    values[10] = ((PyObject *)Py_None);
     if (unlikely(__pyx_kwds)) {
       Py_ssize_t kw_args;
       const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
@@ -8045,7 +8044,7 @@ static PyObject *__pyx_pw_7pyFFTps_9PowerSpec_35Pk1D(PyObject *__pyx_self, PyObj
  * @cython.wraparound(False)
  * def Pk1D(delta,BoxSize,MAS='CIC',threads=1, verbose=True,             # <<<<<<<<<<<<<<
  *          SNFlag=False, numeff=1.0, interlaced=False,
- *          kmin=0.0, kmax=None, kbin=10):
+ *          kmin=0.0, kmax=None, kbin=None):
  */
 
   /* function exit code */
@@ -8124,10 +8123,11 @@ static PyObject *__pyx_pf_7pyFFTps_9PowerSpec_34Pk1D(CYTHON_UNUSED PyObject *__p
   __Pyx_RefNannySetupContext("Pk1D", 0);
   __Pyx_INCREF(__pyx_v_kmin);
   __Pyx_INCREF(__pyx_v_kmax);
+  __Pyx_INCREF(__pyx_v_kbin);
 
   /* "pyFFTps/PowerSpec.pyx":250
  *          SNFlag=False, numeff=1.0, interlaced=False,
- *          kmin=0.0, kmax=None, kbin=10):
+ *          kmin=0.0, kmax=None, kbin=None):
  *     start = time.time()             # <<<<<<<<<<<<<<
  *     cdef int kxx, kyy, kzz, kx, ky, kz,dims, middle, k_index, MAS_index, SN_index
  *     cdef int kmax_par, k_par, i, modefactor
@@ -8206,7 +8206,7 @@ static PyObject *__pyx_pf_7pyFFTps_9PowerSpec_34Pk1D(CYTHON_UNUSED PyObject *__p
  *     kF   = 2.0*np.pi/BoxSize
  *     MAS_index = MAS_function(MAS)             # <<<<<<<<<<<<<<
  *     if SNFlag:
- *         if verbose: print('Subtracting shotnoise from the field')
+ *         SN_index = MAS_index
  */
   __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_MAS_function); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 270, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
@@ -8233,8 +8233,8 @@ static PyObject *__pyx_pf_7pyFFTps_9PowerSpec_34Pk1D(CYTHON_UNUSED PyObject *__p
  *     kF   = 2.0*np.pi/BoxSize
  *     MAS_index = MAS_function(MAS)
  *     if SNFlag:             # <<<<<<<<<<<<<<
- *         if verbose: print('Subtracting shotnoise from the field')
  *         SN_index = MAS_index
+ *     else:
  */
   __pyx_t_4 = __Pyx_PyObject_IsTrue(__pyx_v_SNFlag); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 271, __pyx_L1_error)
   if (__pyx_t_4) {
@@ -8242,20 +8242,6 @@ static PyObject *__pyx_pf_7pyFFTps_9PowerSpec_34Pk1D(CYTHON_UNUSED PyObject *__p
     /* "pyFFTps/PowerSpec.pyx":272
  *     MAS_index = MAS_function(MAS)
  *     if SNFlag:
- *         if verbose: print('Subtracting shotnoise from the field')             # <<<<<<<<<<<<<<
- *         SN_index = MAS_index
- *     else:
- */
-    __pyx_t_4 = __Pyx_PyObject_IsTrue(__pyx_v_verbose); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 272, __pyx_L1_error)
-    if (__pyx_t_4) {
-      __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__8, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 272, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_3);
-      __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    }
-
-    /* "pyFFTps/PowerSpec.pyx":273
- *     if SNFlag:
- *         if verbose: print('Subtracting shotnoise from the field')
  *         SN_index = MAS_index             # <<<<<<<<<<<<<<
  *     else:
  *         SN_index = 0
@@ -8266,13 +8252,13 @@ static PyObject *__pyx_pf_7pyFFTps_9PowerSpec_34Pk1D(CYTHON_UNUSED PyObject *__p
  *     kF   = 2.0*np.pi/BoxSize
  *     MAS_index = MAS_function(MAS)
  *     if SNFlag:             # <<<<<<<<<<<<<<
- *         if verbose: print('Subtracting shotnoise from the field')
  *         SN_index = MAS_index
+ *     else:
  */
     goto __pyx_L4;
   }
 
-  /* "pyFFTps/PowerSpec.pyx":275
+  /* "pyFFTps/PowerSpec.pyx":274
  *         SN_index = MAS_index
  *     else:
  *         SN_index = 0             # <<<<<<<<<<<<<<
@@ -8284,14 +8270,14 @@ static PyObject *__pyx_pf_7pyFFTps_9PowerSpec_34Pk1D(CYTHON_UNUSED PyObject *__p
   }
   __pyx_L4:;
 
-  /* "pyFFTps/PowerSpec.pyx":278
+  /* "pyFFTps/PowerSpec.pyx":277
  * 
  *     ## compute FFT of the field (change this for double precision) ##
  *     delta_k = FFT3Dr_f(delta,threads)             # <<<<<<<<<<<<<<
  *     #################################
  *     if kmax is None:  kmax = middle*kF
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_FFT3Dr_f); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 278, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_FFT3Dr_f); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 277, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_t_2 = NULL;
   __pyx_t_6 = 0;
@@ -8308,7 +8294,7 @@ static PyObject *__pyx_pf_7pyFFTps_9PowerSpec_34Pk1D(CYTHON_UNUSED PyObject *__p
   #if CYTHON_FAST_PYCALL
   if (PyFunction_Check(__pyx_t_1)) {
     PyObject *__pyx_temp[3] = {__pyx_t_2, __pyx_v_delta, __pyx_v_threads};
-    __pyx_t_3 = __Pyx_PyFunction_FastCall(__pyx_t_1, __pyx_temp+1-__pyx_t_6, 2+__pyx_t_6); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 278, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyFunction_FastCall(__pyx_t_1, __pyx_temp+1-__pyx_t_6, 2+__pyx_t_6); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 277, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_GOTREF(__pyx_t_3);
   } else
@@ -8316,13 +8302,13 @@ static PyObject *__pyx_pf_7pyFFTps_9PowerSpec_34Pk1D(CYTHON_UNUSED PyObject *__p
   #if CYTHON_FAST_PYCCALL
   if (__Pyx_PyFastCFunction_Check(__pyx_t_1)) {
     PyObject *__pyx_temp[3] = {__pyx_t_2, __pyx_v_delta, __pyx_v_threads};
-    __pyx_t_3 = __Pyx_PyCFunction_FastCall(__pyx_t_1, __pyx_temp+1-__pyx_t_6, 2+__pyx_t_6); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 278, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyCFunction_FastCall(__pyx_t_1, __pyx_temp+1-__pyx_t_6, 2+__pyx_t_6); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 277, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_GOTREF(__pyx_t_3);
   } else
   #endif
   {
-    __pyx_t_7 = PyTuple_New(2+__pyx_t_6); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 278, __pyx_L1_error)
+    __pyx_t_7 = PyTuple_New(2+__pyx_t_6); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 277, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_7);
     if (__pyx_t_2) {
       __Pyx_GIVEREF(__pyx_t_2); PyTuple_SET_ITEM(__pyx_t_7, 0, __pyx_t_2); __pyx_t_2 = NULL;
@@ -8333,38 +8319,54 @@ static PyObject *__pyx_pf_7pyFFTps_9PowerSpec_34Pk1D(CYTHON_UNUSED PyObject *__p
     __Pyx_INCREF(__pyx_v_threads);
     __Pyx_GIVEREF(__pyx_v_threads);
     PyTuple_SET_ITEM(__pyx_t_7, 1+__pyx_t_6, __pyx_v_threads);
-    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_7, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 278, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_7, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 277, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
   }
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_d_d_dc___pyx_t_float_complex(__pyx_t_3, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 278, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_d_d_dc___pyx_t_float_complex(__pyx_t_3, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 277, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_v_delta_k = __pyx_t_8;
   __pyx_t_8.memview = NULL;
   __pyx_t_8.data = NULL;
 
-  /* "pyFFTps/PowerSpec.pyx":280
+  /* "pyFFTps/PowerSpec.pyx":279
  *     delta_k = FFT3Dr_f(delta,threads)
  *     #################################
  *     if kmax is None:  kmax = middle*kF             # <<<<<<<<<<<<<<
+ *     if kbin is None:  kbin = middle + 1
  * 
- *     kmax = kmax/kF; kmin = kmin/kF
  */
   __pyx_t_4 = (__pyx_v_kmax == Py_None);
   __pyx_t_9 = (__pyx_t_4 != 0);
   if (__pyx_t_9) {
-    __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_v_middle); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 280, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_v_middle); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 279, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_1 = PyNumber_Multiply(__pyx_t_3, __pyx_v_kF); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 280, __pyx_L1_error)
+    __pyx_t_1 = PyNumber_Multiply(__pyx_t_3, __pyx_v_kF); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 279, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF_SET(__pyx_v_kmax, __pyx_t_1);
     __pyx_t_1 = 0;
   }
 
-  /* "pyFFTps/PowerSpec.pyx":282
+  /* "pyFFTps/PowerSpec.pyx":280
+ *     #################################
  *     if kmax is None:  kmax = middle*kF
+ *     if kbin is None:  kbin = middle + 1             # <<<<<<<<<<<<<<
+ * 
+ *     kmax = kmax/kF; kmin = kmin/kF
+ */
+  __pyx_t_9 = (__pyx_v_kbin == Py_None);
+  __pyx_t_4 = (__pyx_t_9 != 0);
+  if (__pyx_t_4) {
+    __pyx_t_1 = __Pyx_PyInt_From_long((__pyx_v_middle + 1)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 280, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __Pyx_DECREF_SET(__pyx_v_kbin, __pyx_t_1);
+    __pyx_t_1 = 0;
+  }
+
+  /* "pyFFTps/PowerSpec.pyx":282
+ *     if kbin is None:  kbin = middle + 1
  * 
  *     kmax = kmax/kF; kmin = kmin/kF             # <<<<<<<<<<<<<<
  *     # define Bins and arrays
@@ -8520,7 +8522,7 @@ static PyObject *__pyx_pf_7pyFFTps_9PowerSpec_34Pk1D(CYTHON_UNUSED PyObject *__p
  *     # compute k,k_par,k_per, mu for each mode. k's are in kF units
  *     start2 = time.time();  prefact = np.pi/dims             # <<<<<<<<<<<<<<
  *     if interlaced and SNFlag:
- *         for kxx in range(dims):
+ *         if verbose: print('Subtracting shotnoise from the field in the interlaced case.')
  */
   __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_time); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 291, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
@@ -8563,23 +8565,37 @@ static PyObject *__pyx_pf_7pyFFTps_9PowerSpec_34Pk1D(CYTHON_UNUSED PyObject *__p
  *     # compute k,k_par,k_per, mu for each mode. k's are in kF units
  *     start2 = time.time();  prefact = np.pi/dims
  *     if interlaced and SNFlag:             # <<<<<<<<<<<<<<
+ *         if verbose: print('Subtracting shotnoise from the field in the interlaced case.')
  *         for kxx in range(dims):
- *             kx = (kxx-dims if (kxx>middle) else kxx)
  */
-  __pyx_t_4 = __Pyx_PyObject_IsTrue(__pyx_v_interlaced); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 292, __pyx_L1_error)
-  if (__pyx_t_4) {
+  __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_v_interlaced); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 292, __pyx_L1_error)
+  if (__pyx_t_9) {
   } else {
-    __pyx_t_9 = __pyx_t_4;
+    __pyx_t_4 = __pyx_t_9;
     goto __pyx_L8_bool_binop_done;
   }
-  __pyx_t_4 = __Pyx_PyObject_IsTrue(__pyx_v_SNFlag); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 292, __pyx_L1_error)
-  __pyx_t_9 = __pyx_t_4;
+  __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_v_SNFlag); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 292, __pyx_L1_error)
+  __pyx_t_4 = __pyx_t_9;
   __pyx_L8_bool_binop_done:;
-  if (__pyx_t_9) {
+  if (__pyx_t_4) {
 
     /* "pyFFTps/PowerSpec.pyx":293
  *     start2 = time.time();  prefact = np.pi/dims
  *     if interlaced and SNFlag:
+ *         if verbose: print('Subtracting shotnoise from the field in the interlaced case.')             # <<<<<<<<<<<<<<
+ *         for kxx in range(dims):
+ *             kx = (kxx-dims if (kxx>middle) else kxx)
+ */
+    __pyx_t_4 = __Pyx_PyObject_IsTrue(__pyx_v_verbose); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 293, __pyx_L1_error)
+    if (__pyx_t_4) {
+      __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__8, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 293, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_2);
+      __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+    }
+
+    /* "pyFFTps/PowerSpec.pyx":294
+ *     if interlaced and SNFlag:
+ *         if verbose: print('Subtracting shotnoise from the field in the interlaced case.')
  *         for kxx in range(dims):             # <<<<<<<<<<<<<<
  *             kx = (kxx-dims if (kxx>middle) else kxx)
  *             sink = sin(prefact*kx);  cosk = cos(prefact*kx)
@@ -8589,8 +8605,8 @@ static PyObject *__pyx_pf_7pyFFTps_9PowerSpec_34Pk1D(CYTHON_UNUSED PyObject *__p
     for (__pyx_t_14 = 0; __pyx_t_14 < __pyx_t_13; __pyx_t_14+=1) {
       __pyx_v_kxx = __pyx_t_14;
 
-      /* "pyFFTps/PowerSpec.pyx":294
- *     if interlaced and SNFlag:
+      /* "pyFFTps/PowerSpec.pyx":295
+ *         if verbose: print('Subtracting shotnoise from the field in the interlaced case.')
  *         for kxx in range(dims):
  *             kx = (kxx-dims if (kxx>middle) else kxx)             # <<<<<<<<<<<<<<
  *             sink = sin(prefact*kx);  cosk = cos(prefact*kx)
@@ -8603,7 +8619,7 @@ static PyObject *__pyx_pf_7pyFFTps_9PowerSpec_34Pk1D(CYTHON_UNUSED PyObject *__p
       }
       __pyx_v_kx = __pyx_t_15;
 
-      /* "pyFFTps/PowerSpec.pyx":295
+      /* "pyFFTps/PowerSpec.pyx":296
  *         for kxx in range(dims):
  *             kx = (kxx-dims if (kxx>middle) else kxx)
  *             sink = sin(prefact*kx);  cosk = cos(prefact*kx)             # <<<<<<<<<<<<<<
@@ -8613,7 +8629,7 @@ static PyObject *__pyx_pf_7pyFFTps_9PowerSpec_34Pk1D(CYTHON_UNUSED PyObject *__p
       __pyx_v_sink = sin((__pyx_v_prefact * __pyx_v_kx));
       __pyx_v_cosk = cos((__pyx_v_prefact * __pyx_v_kx));
 
-      /* "pyFFTps/PowerSpec.pyx":296
+      /* "pyFFTps/PowerSpec.pyx":297
  *             kx = (kxx-dims if (kxx>middle) else kxx)
  *             sink = sin(prefact*kx);  cosk = cos(prefact*kx)
  *             MAS_corr[0] = MAS_correction(prefact*kx,MAS_index)             # <<<<<<<<<<<<<<
@@ -8622,7 +8638,7 @@ static PyObject *__pyx_pf_7pyFFTps_9PowerSpec_34Pk1D(CYTHON_UNUSED PyObject *__p
  */
       (__pyx_v_MAS_corr[0]) = __pyx_f_7pyFFTps_9PowerSpec_MAS_correction((__pyx_v_prefact * __pyx_v_kx), __pyx_v_MAS_index, 0);
 
-      /* "pyFFTps/PowerSpec.pyx":297
+      /* "pyFFTps/PowerSpec.pyx":298
  *             sink = sin(prefact*kx);  cosk = cos(prefact*kx)
  *             MAS_corr[0] = MAS_correction(prefact*kx,MAS_index)
  *             SN_corr0[0] = Ckinterlaced_even(sink, cosk, SN_index)             # <<<<<<<<<<<<<<
@@ -8631,7 +8647,7 @@ static PyObject *__pyx_pf_7pyFFTps_9PowerSpec_34Pk1D(CYTHON_UNUSED PyObject *__p
  */
       (__pyx_v_SN_corr0[0]) = __pyx_f_7pyFFTps_9PowerSpec_Ckinterlaced_even(__pyx_v_sink, __pyx_v_cosk, __pyx_v_SN_index, 0);
 
-      /* "pyFFTps/PowerSpec.pyx":298
+      /* "pyFFTps/PowerSpec.pyx":299
  *             MAS_corr[0] = MAS_correction(prefact*kx,MAS_index)
  *             SN_corr0[0] = Ckinterlaced_even(sink, cosk, SN_index)
  *             SN_corr1[0] = Ckinterlaced_odd (sink, SN_index)             # <<<<<<<<<<<<<<
@@ -8640,7 +8656,7 @@ static PyObject *__pyx_pf_7pyFFTps_9PowerSpec_34Pk1D(CYTHON_UNUSED PyObject *__p
  */
       (__pyx_v_SN_corr1[0]) = __pyx_f_7pyFFTps_9PowerSpec_Ckinterlaced_odd(__pyx_v_sink, __pyx_v_SN_index, 0);
 
-      /* "pyFFTps/PowerSpec.pyx":300
+      /* "pyFFTps/PowerSpec.pyx":301
  *             SN_corr1[0] = Ckinterlaced_odd (sink, SN_index)
  * 
  *             for kyy in range(dims):             # <<<<<<<<<<<<<<
@@ -8652,7 +8668,7 @@ static PyObject *__pyx_pf_7pyFFTps_9PowerSpec_34Pk1D(CYTHON_UNUSED PyObject *__p
       for (__pyx_t_17 = 0; __pyx_t_17 < __pyx_t_16; __pyx_t_17+=1) {
         __pyx_v_kyy = __pyx_t_17;
 
-        /* "pyFFTps/PowerSpec.pyx":301
+        /* "pyFFTps/PowerSpec.pyx":302
  * 
  *             for kyy in range(dims):
  *                 ky = (kyy-dims if (kyy>middle) else kyy)             # <<<<<<<<<<<<<<
@@ -8666,7 +8682,7 @@ static PyObject *__pyx_pf_7pyFFTps_9PowerSpec_34Pk1D(CYTHON_UNUSED PyObject *__p
         }
         __pyx_v_ky = __pyx_t_18;
 
-        /* "pyFFTps/PowerSpec.pyx":302
+        /* "pyFFTps/PowerSpec.pyx":303
  *             for kyy in range(dims):
  *                 ky = (kyy-dims if (kyy>middle) else kyy)
  *                 sink = sin(prefact*ky);  cosk = cos(prefact*ky)             # <<<<<<<<<<<<<<
@@ -8676,7 +8692,7 @@ static PyObject *__pyx_pf_7pyFFTps_9PowerSpec_34Pk1D(CYTHON_UNUSED PyObject *__p
         __pyx_v_sink = sin((__pyx_v_prefact * __pyx_v_ky));
         __pyx_v_cosk = cos((__pyx_v_prefact * __pyx_v_ky));
 
-        /* "pyFFTps/PowerSpec.pyx":303
+        /* "pyFFTps/PowerSpec.pyx":304
  *                 ky = (kyy-dims if (kyy>middle) else kyy)
  *                 sink = sin(prefact*ky);  cosk = cos(prefact*ky)
  *                 MAS_corr[1] = MAS_correction(prefact*ky,MAS_index)             # <<<<<<<<<<<<<<
@@ -8685,7 +8701,7 @@ static PyObject *__pyx_pf_7pyFFTps_9PowerSpec_34Pk1D(CYTHON_UNUSED PyObject *__p
  */
         (__pyx_v_MAS_corr[1]) = __pyx_f_7pyFFTps_9PowerSpec_MAS_correction((__pyx_v_prefact * __pyx_v_ky), __pyx_v_MAS_index, 0);
 
-        /* "pyFFTps/PowerSpec.pyx":304
+        /* "pyFFTps/PowerSpec.pyx":305
  *                 sink = sin(prefact*ky);  cosk = cos(prefact*ky)
  *                 MAS_corr[1] = MAS_correction(prefact*ky,MAS_index)
  *                 SN_corr0[1] = Ckinterlaced_even(sink, cosk, SN_index)             # <<<<<<<<<<<<<<
@@ -8694,7 +8710,7 @@ static PyObject *__pyx_pf_7pyFFTps_9PowerSpec_34Pk1D(CYTHON_UNUSED PyObject *__p
  */
         (__pyx_v_SN_corr0[1]) = __pyx_f_7pyFFTps_9PowerSpec_Ckinterlaced_even(__pyx_v_sink, __pyx_v_cosk, __pyx_v_SN_index, 0);
 
-        /* "pyFFTps/PowerSpec.pyx":305
+        /* "pyFFTps/PowerSpec.pyx":306
  *                 MAS_corr[1] = MAS_correction(prefact*ky,MAS_index)
  *                 SN_corr0[1] = Ckinterlaced_even(sink, cosk, SN_index)
  *                 SN_corr1[1] = Ckinterlaced_odd (sink, SN_index)             # <<<<<<<<<<<<<<
@@ -8703,7 +8719,7 @@ static PyObject *__pyx_pf_7pyFFTps_9PowerSpec_34Pk1D(CYTHON_UNUSED PyObject *__p
  */
         (__pyx_v_SN_corr1[1]) = __pyx_f_7pyFFTps_9PowerSpec_Ckinterlaced_odd(__pyx_v_sink, __pyx_v_SN_index, 0);
 
-        /* "pyFFTps/PowerSpec.pyx":307
+        /* "pyFFTps/PowerSpec.pyx":308
  *                 SN_corr1[1] = Ckinterlaced_odd (sink, SN_index)
  * 
  *                 for kzz in range(middle+1): #kzz=[0,1,..,middle] --> kz>0             # <<<<<<<<<<<<<<
@@ -8715,7 +8731,7 @@ static PyObject *__pyx_pf_7pyFFTps_9PowerSpec_34Pk1D(CYTHON_UNUSED PyObject *__p
         for (__pyx_t_18 = 0; __pyx_t_18 < __pyx_t_20; __pyx_t_18+=1) {
           __pyx_v_kzz = __pyx_t_18;
 
-          /* "pyFFTps/PowerSpec.pyx":308
+          /* "pyFFTps/PowerSpec.pyx":309
  * 
  *                 for kzz in range(middle+1): #kzz=[0,1,..,middle] --> kz>0
  *                     kz = (kzz-dims if (kzz>middle) else kzz)             # <<<<<<<<<<<<<<
@@ -8729,7 +8745,7 @@ static PyObject *__pyx_pf_7pyFFTps_9PowerSpec_34Pk1D(CYTHON_UNUSED PyObject *__p
           }
           __pyx_v_kz = __pyx_t_21;
 
-          /* "pyFFTps/PowerSpec.pyx":309
+          /* "pyFFTps/PowerSpec.pyx":310
  *                 for kzz in range(middle+1): #kzz=[0,1,..,middle] --> kz>0
  *                     kz = (kzz-dims if (kzz>middle) else kzz)
  *                     modefactor = 2             # <<<<<<<<<<<<<<
@@ -8738,27 +8754,27 @@ static PyObject *__pyx_pf_7pyFFTps_9PowerSpec_34Pk1D(CYTHON_UNUSED PyObject *__p
  */
           __pyx_v_modefactor = 2;
 
-          /* "pyFFTps/PowerSpec.pyx":310
+          /* "pyFFTps/PowerSpec.pyx":311
  *                     kz = (kzz-dims if (kzz>middle) else kzz)
  *                     modefactor = 2
  *                     if (kzz==middle) or (kzz==0) : modefactor = 1             # <<<<<<<<<<<<<<
  *                     sink = sin(prefact*kz);  cosk = cos(prefact*kz)
  *                     MAS_corr[2] = MAS_correction(prefact*kz,MAS_index)
  */
-          __pyx_t_4 = ((__pyx_v_kzz == __pyx_v_middle) != 0);
-          if (!__pyx_t_4) {
+          __pyx_t_9 = ((__pyx_v_kzz == __pyx_v_middle) != 0);
+          if (!__pyx_t_9) {
           } else {
-            __pyx_t_9 = __pyx_t_4;
-            goto __pyx_L17_bool_binop_done;
+            __pyx_t_4 = __pyx_t_9;
+            goto __pyx_L18_bool_binop_done;
           }
-          __pyx_t_4 = ((__pyx_v_kzz == 0) != 0);
-          __pyx_t_9 = __pyx_t_4;
-          __pyx_L17_bool_binop_done:;
-          if (__pyx_t_9) {
+          __pyx_t_9 = ((__pyx_v_kzz == 0) != 0);
+          __pyx_t_4 = __pyx_t_9;
+          __pyx_L18_bool_binop_done:;
+          if (__pyx_t_4) {
             __pyx_v_modefactor = 1;
           }
 
-          /* "pyFFTps/PowerSpec.pyx":311
+          /* "pyFFTps/PowerSpec.pyx":312
  *                     modefactor = 2
  *                     if (kzz==middle) or (kzz==0) : modefactor = 1
  *                     sink = sin(prefact*kz);  cosk = cos(prefact*kz)             # <<<<<<<<<<<<<<
@@ -8768,7 +8784,7 @@ static PyObject *__pyx_pf_7pyFFTps_9PowerSpec_34Pk1D(CYTHON_UNUSED PyObject *__p
           __pyx_v_sink = sin((__pyx_v_prefact * __pyx_v_kz));
           __pyx_v_cosk = cos((__pyx_v_prefact * __pyx_v_kz));
 
-          /* "pyFFTps/PowerSpec.pyx":312
+          /* "pyFFTps/PowerSpec.pyx":313
  *                     if (kzz==middle) or (kzz==0) : modefactor = 1
  *                     sink = sin(prefact*kz);  cosk = cos(prefact*kz)
  *                     MAS_corr[2] = MAS_correction(prefact*kz,MAS_index)             # <<<<<<<<<<<<<<
@@ -8777,7 +8793,7 @@ static PyObject *__pyx_pf_7pyFFTps_9PowerSpec_34Pk1D(CYTHON_UNUSED PyObject *__p
  */
           (__pyx_v_MAS_corr[2]) = __pyx_f_7pyFFTps_9PowerSpec_MAS_correction((__pyx_v_prefact * __pyx_v_kz), __pyx_v_MAS_index, 0);
 
-          /* "pyFFTps/PowerSpec.pyx":313
+          /* "pyFFTps/PowerSpec.pyx":314
  *                     sink = sin(prefact*kz);  cosk = cos(prefact*kz)
  *                     MAS_corr[2] = MAS_correction(prefact*kz,MAS_index)
  *                     SN_corr0[2] = Ckinterlaced_even(sink, cosk, SN_index)             # <<<<<<<<<<<<<<
@@ -8786,7 +8802,7 @@ static PyObject *__pyx_pf_7pyFFTps_9PowerSpec_34Pk1D(CYTHON_UNUSED PyObject *__p
  */
           (__pyx_v_SN_corr0[2]) = __pyx_f_7pyFFTps_9PowerSpec_Ckinterlaced_even(__pyx_v_sink, __pyx_v_cosk, __pyx_v_SN_index, 0);
 
-          /* "pyFFTps/PowerSpec.pyx":314
+          /* "pyFFTps/PowerSpec.pyx":315
  *                     MAS_corr[2] = MAS_correction(prefact*kz,MAS_index)
  *                     SN_corr0[2] = Ckinterlaced_even(sink, cosk, SN_index)
  *                     SN_corr1[2] = Ckinterlaced_odd (sink, SN_index)             # <<<<<<<<<<<<<<
@@ -8795,7 +8811,7 @@ static PyObject *__pyx_pf_7pyFFTps_9PowerSpec_34Pk1D(CYTHON_UNUSED PyObject *__p
  */
           (__pyx_v_SN_corr1[2]) = __pyx_f_7pyFFTps_9PowerSpec_Ckinterlaced_odd(__pyx_v_sink, __pyx_v_SN_index, 0);
 
-          /* "pyFFTps/PowerSpec.pyx":323
+          /* "pyFFTps/PowerSpec.pyx":324
  * 
  *                     # compute |k| of the mode and its integer part
  *                     k       = sqrt(kx*kx + ky*ky + kz*kz)             # <<<<<<<<<<<<<<
@@ -8804,62 +8820,62 @@ static PyObject *__pyx_pf_7pyFFTps_9PowerSpec_34Pk1D(CYTHON_UNUSED PyObject *__p
  */
           __pyx_v_k = sqrt((((__pyx_v_kx * __pyx_v_kx) + (__pyx_v_ky * __pyx_v_ky)) + (__pyx_v_kz * __pyx_v_kz)));
 
-          /* "pyFFTps/PowerSpec.pyx":324
+          /* "pyFFTps/PowerSpec.pyx":325
  *                     # compute |k| of the mode and its integer part
  *                     k       = sqrt(kx*kx + ky*ky + kz*kz)
  *                     if (k >= kmax) or (k < kmin): continue             # <<<<<<<<<<<<<<
  * 
  *                     k_index = int((k-kmin)/dk)
  */
-          __pyx_t_2 = PyFloat_FromDouble(__pyx_v_k); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 324, __pyx_L1_error)
+          __pyx_t_2 = PyFloat_FromDouble(__pyx_v_k); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 325, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_2);
-          __pyx_t_3 = PyObject_RichCompare(__pyx_t_2, __pyx_v_kmax, Py_GE); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 324, __pyx_L1_error)
+          __pyx_t_3 = PyObject_RichCompare(__pyx_t_2, __pyx_v_kmax, Py_GE); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 325, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-          __pyx_t_4 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 324, __pyx_L1_error)
+          __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 325, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-          if (!__pyx_t_4) {
+          if (!__pyx_t_9) {
           } else {
-            __pyx_t_9 = __pyx_t_4;
-            goto __pyx_L20_bool_binop_done;
+            __pyx_t_4 = __pyx_t_9;
+            goto __pyx_L21_bool_binop_done;
           }
-          __pyx_t_3 = PyFloat_FromDouble(__pyx_v_k); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 324, __pyx_L1_error)
+          __pyx_t_3 = PyFloat_FromDouble(__pyx_v_k); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 325, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_3);
-          __pyx_t_2 = PyObject_RichCompare(__pyx_t_3, __pyx_v_kmin, Py_LT); __Pyx_XGOTREF(__pyx_t_2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 324, __pyx_L1_error)
+          __pyx_t_2 = PyObject_RichCompare(__pyx_t_3, __pyx_v_kmin, Py_LT); __Pyx_XGOTREF(__pyx_t_2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 325, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-          __pyx_t_4 = __Pyx_PyObject_IsTrue(__pyx_t_2); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 324, __pyx_L1_error)
+          __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_2); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 325, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-          __pyx_t_9 = __pyx_t_4;
-          __pyx_L20_bool_binop_done:;
-          if (__pyx_t_9) {
-            goto __pyx_L14_continue;
+          __pyx_t_4 = __pyx_t_9;
+          __pyx_L21_bool_binop_done:;
+          if (__pyx_t_4) {
+            goto __pyx_L15_continue;
           }
 
-          /* "pyFFTps/PowerSpec.pyx":326
+          /* "pyFFTps/PowerSpec.pyx":327
  *                     if (k >= kmax) or (k < kmin): continue
  * 
  *                     k_index = int((k-kmin)/dk)             # <<<<<<<<<<<<<<
  *                     # correct modes amplitude for MAS
  *                     MAS_factor = MAS_corr[0]*MAS_corr[1]*MAS_corr[2]
  */
-          __pyx_t_2 = PyFloat_FromDouble(__pyx_v_k); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 326, __pyx_L1_error)
+          __pyx_t_2 = PyFloat_FromDouble(__pyx_v_k); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 327, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_2);
-          __pyx_t_3 = PyNumber_Subtract(__pyx_t_2, __pyx_v_kmin); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 326, __pyx_L1_error)
+          __pyx_t_3 = PyNumber_Subtract(__pyx_t_2, __pyx_v_kmin); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 327, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_3);
           __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-          __pyx_t_2 = PyFloat_FromDouble(__pyx_v_dk); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 326, __pyx_L1_error)
+          __pyx_t_2 = PyFloat_FromDouble(__pyx_v_dk); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 327, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_2);
-          __pyx_t_1 = __Pyx_PyNumber_Divide(__pyx_t_3, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 326, __pyx_L1_error)
+          __pyx_t_1 = __Pyx_PyNumber_Divide(__pyx_t_3, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 327, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_1);
           __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
           __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-          __pyx_t_2 = __Pyx_PyNumber_Int(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 326, __pyx_L1_error)
+          __pyx_t_2 = __Pyx_PyNumber_Int(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 327, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_2);
           __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-          __pyx_t_21 = __Pyx_PyInt_As_int(__pyx_t_2); if (unlikely((__pyx_t_21 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 326, __pyx_L1_error)
+          __pyx_t_21 = __Pyx_PyInt_As_int(__pyx_t_2); if (unlikely((__pyx_t_21 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 327, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
           __pyx_v_k_index = __pyx_t_21;
 
-          /* "pyFFTps/PowerSpec.pyx":328
+          /* "pyFFTps/PowerSpec.pyx":329
  *                     k_index = int((k-kmin)/dk)
  *                     # correct modes amplitude for MAS
  *                     MAS_factor = MAS_corr[0]*MAS_corr[1]*MAS_corr[2]             # <<<<<<<<<<<<<<
@@ -8868,7 +8884,7 @@ static PyObject *__pyx_pf_7pyFFTps_9PowerSpec_34Pk1D(CYTHON_UNUSED PyObject *__p
  */
           __pyx_v_MAS_factor = (((__pyx_v_MAS_corr[0]) * (__pyx_v_MAS_corr[1])) * (__pyx_v_MAS_corr[2]));
 
-          /* "pyFFTps/PowerSpec.pyx":329
+          /* "pyFFTps/PowerSpec.pyx":330
  *                     # correct modes amplitude for MAS
  *                     MAS_factor = MAS_corr[0]*MAS_corr[1]*MAS_corr[2]
  *                     SN_factor  = SN_corr0[0]*SN_corr0[1]*SN_corr0[2]             # <<<<<<<<<<<<<<
@@ -8877,7 +8893,7 @@ static PyObject *__pyx_pf_7pyFFTps_9PowerSpec_34Pk1D(CYTHON_UNUSED PyObject *__p
  */
           __pyx_v_SN_factor = (((__pyx_v_SN_corr0[0]) * (__pyx_v_SN_corr0[1])) * (__pyx_v_SN_corr0[2]));
 
-          /* "pyFFTps/PowerSpec.pyx":330
+          /* "pyFFTps/PowerSpec.pyx":331
  *                     MAS_factor = MAS_corr[0]*MAS_corr[1]*MAS_corr[2]
  *                     SN_factor  = SN_corr0[0]*SN_corr0[1]*SN_corr0[2]
  *                     SN_factor += SN_corr0[0]*SN_corr1[1]*SN_corr1[2]             # <<<<<<<<<<<<<<
@@ -8886,41 +8902,41 @@ static PyObject *__pyx_pf_7pyFFTps_9PowerSpec_34Pk1D(CYTHON_UNUSED PyObject *__p
  */
           __pyx_v_SN_factor = (__pyx_v_SN_factor + (((__pyx_v_SN_corr0[0]) * (__pyx_v_SN_corr1[1])) * (__pyx_v_SN_corr1[2])));
 
-          /* "pyFFTps/PowerSpec.pyx":331
+          /* "pyFFTps/PowerSpec.pyx":332
  *                     SN_factor  = SN_corr0[0]*SN_corr0[1]*SN_corr0[2]
  *                     SN_factor += SN_corr0[0]*SN_corr1[1]*SN_corr1[2]
  *                     SN_factor += SN_corr1[0]*SN_corr0[1]*SN_corr1[2]             # <<<<<<<<<<<<<<
  *                     SN_factor += SN_corr1[0]*SN_corr1[1]*SN_corr0[2]
- *                     SN_factor /= numeff
+ *                     SN_factor  = SN_factor / numeff
  */
           __pyx_v_SN_factor = (__pyx_v_SN_factor + (((__pyx_v_SN_corr1[0]) * (__pyx_v_SN_corr0[1])) * (__pyx_v_SN_corr1[2])));
 
-          /* "pyFFTps/PowerSpec.pyx":332
+          /* "pyFFTps/PowerSpec.pyx":333
  *                     SN_factor += SN_corr0[0]*SN_corr1[1]*SN_corr1[2]
  *                     SN_factor += SN_corr1[0]*SN_corr0[1]*SN_corr1[2]
  *                     SN_factor += SN_corr1[0]*SN_corr1[1]*SN_corr0[2]             # <<<<<<<<<<<<<<
- *                     SN_factor /= numeff
+ *                     SN_factor  = SN_factor / numeff
  * 
  */
           __pyx_v_SN_factor = (__pyx_v_SN_factor + (((__pyx_v_SN_corr1[0]) * (__pyx_v_SN_corr1[1])) * (__pyx_v_SN_corr0[2])));
 
-          /* "pyFFTps/PowerSpec.pyx":333
+          /* "pyFFTps/PowerSpec.pyx":334
  *                     SN_factor += SN_corr1[0]*SN_corr0[1]*SN_corr1[2]
  *                     SN_factor += SN_corr1[0]*SN_corr1[1]*SN_corr0[2]
- *                     SN_factor /= numeff             # <<<<<<<<<<<<<<
+ *                     SN_factor  = SN_factor / numeff             # <<<<<<<<<<<<<<
  * 
  *                     # compute |delta_k|^2 of the mode
  */
-          __pyx_t_2 = PyFloat_FromDouble(__pyx_v_SN_factor); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 333, __pyx_L1_error)
+          __pyx_t_2 = PyFloat_FromDouble(__pyx_v_SN_factor); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 334, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_2);
-          __pyx_t_1 = __Pyx_PyNumber_InPlaceDivide(__pyx_t_2, __pyx_v_numeff); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 333, __pyx_L1_error)
+          __pyx_t_1 = __Pyx_PyNumber_Divide(__pyx_t_2, __pyx_v_numeff); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 334, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_1);
           __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-          __pyx_t_22 = __pyx_PyFloat_AsFloat(__pyx_t_1); if (unlikely((__pyx_t_22 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 333, __pyx_L1_error)
+          __pyx_t_22 = __pyx_PyFloat_AsFloat(__pyx_t_1); if (unlikely((__pyx_t_22 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 334, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
           __pyx_v_SN_factor = __pyx_t_22;
 
-          /* "pyFFTps/PowerSpec.pyx":336
+          /* "pyFFTps/PowerSpec.pyx":337
  * 
  *                     # compute |delta_k|^2 of the mode
  *                     real = delta_k[kxx,kyy,kzz].real             # <<<<<<<<<<<<<<
@@ -8933,7 +8949,7 @@ static PyObject *__pyx_pf_7pyFFTps_9PowerSpec_34Pk1D(CYTHON_UNUSED PyObject *__p
           __pyx_t_22 = __Pyx_CREAL((*((__pyx_t_float_complex *) ( /* dim=2 */ ((char *) (((__pyx_t_float_complex *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_delta_k.data + __pyx_t_23 * __pyx_v_delta_k.strides[0]) ) + __pyx_t_24 * __pyx_v_delta_k.strides[1]) )) + __pyx_t_25)) ))));
           __pyx_v_real = __pyx_t_22;
 
-          /* "pyFFTps/PowerSpec.pyx":337
+          /* "pyFFTps/PowerSpec.pyx":338
  *                     # compute |delta_k|^2 of the mode
  *                     real = delta_k[kxx,kyy,kzz].real
  *                     imag = delta_k[kxx,kyy,kzz].imag             # <<<<<<<<<<<<<<
@@ -8946,7 +8962,7 @@ static PyObject *__pyx_pf_7pyFFTps_9PowerSpec_34Pk1D(CYTHON_UNUSED PyObject *__p
           __pyx_t_22 = __Pyx_CIMAG((*((__pyx_t_float_complex *) ( /* dim=2 */ ((char *) (((__pyx_t_float_complex *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_delta_k.data + __pyx_t_25 * __pyx_v_delta_k.strides[0]) ) + __pyx_t_24 * __pyx_v_delta_k.strides[1]) )) + __pyx_t_23)) ))));
           __pyx_v_imag = __pyx_t_22;
 
-          /* "pyFFTps/PowerSpec.pyx":338
+          /* "pyFFTps/PowerSpec.pyx":339
  *                     real = delta_k[kxx,kyy,kzz].real
  *                     imag = delta_k[kxx,kyy,kzz].imag
  *                     delta2 = (real*real + imag*imag - SN_factor)*MAS_factor*MAS_factor             # <<<<<<<<<<<<<<
@@ -8955,7 +8971,7 @@ static PyObject *__pyx_pf_7pyFFTps_9PowerSpec_34Pk1D(CYTHON_UNUSED PyObject *__p
  */
           __pyx_v_delta2 = (((((__pyx_v_real * __pyx_v_real) + (__pyx_v_imag * __pyx_v_imag)) - __pyx_v_SN_factor) * __pyx_v_MAS_factor) * __pyx_v_MAS_factor);
 
-          /* "pyFFTps/PowerSpec.pyx":341
+          /* "pyFFTps/PowerSpec.pyx":342
  * 
  *                     ## Here PK1D means 1D power spectrum not 1D k (in Pylians)
  *                     k1D[k_index]      += k * modefactor             # <<<<<<<<<<<<<<
@@ -8965,7 +8981,7 @@ static PyObject *__pyx_pf_7pyFFTps_9PowerSpec_34Pk1D(CYTHON_UNUSED PyObject *__p
           __pyx_t_23 = __pyx_v_k_index;
           *((__pyx_t_5numpy_float64_t *) ( /* dim=0 */ ((char *) (((__pyx_t_5numpy_float64_t *) __pyx_v_k1D.data) + __pyx_t_23)) )) += (__pyx_v_k * __pyx_v_modefactor);
 
-          /* "pyFFTps/PowerSpec.pyx":342
+          /* "pyFFTps/PowerSpec.pyx":343
  *                     ## Here PK1D means 1D power spectrum not 1D k (in Pylians)
  *                     k1D[k_index]      += k * modefactor
  *                     Pk1D[k_index]     += delta2 * modefactor             # <<<<<<<<<<<<<<
@@ -8975,7 +8991,7 @@ static PyObject *__pyx_pf_7pyFFTps_9PowerSpec_34Pk1D(CYTHON_UNUSED PyObject *__p
           __pyx_t_23 = __pyx_v_k_index;
           *((__pyx_t_5numpy_float64_t *) ( /* dim=0 */ ((char *) (((__pyx_t_5numpy_float64_t *) __pyx_v_Pk1D.data) + __pyx_t_23)) )) += (__pyx_v_delta2 * __pyx_v_modefactor);
 
-          /* "pyFFTps/PowerSpec.pyx":343
+          /* "pyFFTps/PowerSpec.pyx":344
  *                     k1D[k_index]      += k * modefactor
  *                     Pk1D[k_index]     += delta2 * modefactor
  *                     Nmodes1D[k_index] += 1.0 * modefactor             # <<<<<<<<<<<<<<
@@ -8984,7 +9000,7 @@ static PyObject *__pyx_pf_7pyFFTps_9PowerSpec_34Pk1D(CYTHON_UNUSED PyObject *__p
  */
           __pyx_t_23 = __pyx_v_k_index;
           *((__pyx_t_5numpy_float64_t *) ( /* dim=0 */ ((char *) (((__pyx_t_5numpy_float64_t *) __pyx_v_Nmodes1D.data) + __pyx_t_23)) )) += (1.0 * __pyx_v_modefactor);
-          __pyx_L14_continue:;
+          __pyx_L15_continue:;
         }
       }
     }
@@ -8993,13 +9009,13 @@ static PyObject *__pyx_pf_7pyFFTps_9PowerSpec_34Pk1D(CYTHON_UNUSED PyObject *__p
  *     # compute k,k_par,k_per, mu for each mode. k's are in kF units
  *     start2 = time.time();  prefact = np.pi/dims
  *     if interlaced and SNFlag:             # <<<<<<<<<<<<<<
+ *         if verbose: print('Subtracting shotnoise from the field in the interlaced case.')
  *         for kxx in range(dims):
- *             kx = (kxx-dims if (kxx>middle) else kxx)
  */
     goto __pyx_L7;
   }
 
-  /* "pyFFTps/PowerSpec.pyx":345
+  /* "pyFFTps/PowerSpec.pyx":346
  *                     Nmodes1D[k_index] += 1.0 * modefactor
  *     else:
  *         for kxx in range(dims):             # <<<<<<<<<<<<<<
@@ -9012,7 +9028,7 @@ static PyObject *__pyx_pf_7pyFFTps_9PowerSpec_34Pk1D(CYTHON_UNUSED PyObject *__p
     for (__pyx_t_14 = 0; __pyx_t_14 < __pyx_t_13; __pyx_t_14+=1) {
       __pyx_v_kxx = __pyx_t_14;
 
-      /* "pyFFTps/PowerSpec.pyx":347
+      /* "pyFFTps/PowerSpec.pyx":348
  *         for kxx in range(dims):
  *         # for kxx in prange(dims, schedule='static'):
  *             kx = (kxx-dims if (kxx>middle) else kxx)             # <<<<<<<<<<<<<<
@@ -9026,7 +9042,7 @@ static PyObject *__pyx_pf_7pyFFTps_9PowerSpec_34Pk1D(CYTHON_UNUSED PyObject *__p
       }
       __pyx_v_kx = __pyx_t_15;
 
-      /* "pyFFTps/PowerSpec.pyx":348
+      /* "pyFFTps/PowerSpec.pyx":349
  *         # for kxx in prange(dims, schedule='static'):
  *             kx = (kxx-dims if (kxx>middle) else kxx)
  *             sink = sin(prefact*kx)             # <<<<<<<<<<<<<<
@@ -9035,7 +9051,7 @@ static PyObject *__pyx_pf_7pyFFTps_9PowerSpec_34Pk1D(CYTHON_UNUSED PyObject *__p
  */
       __pyx_v_sink = sin((__pyx_v_prefact * __pyx_v_kx));
 
-      /* "pyFFTps/PowerSpec.pyx":349
+      /* "pyFFTps/PowerSpec.pyx":350
  *             kx = (kxx-dims if (kxx>middle) else kxx)
  *             sink = sin(prefact*kx)
  *             MAS_corr[0] = MAS_correction(prefact*kx,MAS_index)             # <<<<<<<<<<<<<<
@@ -9044,7 +9060,7 @@ static PyObject *__pyx_pf_7pyFFTps_9PowerSpec_34Pk1D(CYTHON_UNUSED PyObject *__p
  */
       (__pyx_v_MAS_corr[0]) = __pyx_f_7pyFFTps_9PowerSpec_MAS_correction((__pyx_v_prefact * __pyx_v_kx), __pyx_v_MAS_index, 0);
 
-      /* "pyFFTps/PowerSpec.pyx":350
+      /* "pyFFTps/PowerSpec.pyx":351
  *             sink = sin(prefact*kx)
  *             MAS_corr[0] = MAS_correction(prefact*kx,MAS_index)
  *             SN_corr0[0] = CkNointerlaced(sink, SN_index)             # <<<<<<<<<<<<<<
@@ -9053,7 +9069,7 @@ static PyObject *__pyx_pf_7pyFFTps_9PowerSpec_34Pk1D(CYTHON_UNUSED PyObject *__p
  */
       (__pyx_v_SN_corr0[0]) = __pyx_f_7pyFFTps_9PowerSpec_CkNointerlaced(__pyx_v_sink, __pyx_v_SN_index, 0);
 
-      /* "pyFFTps/PowerSpec.pyx":352
+      /* "pyFFTps/PowerSpec.pyx":353
  *             SN_corr0[0] = CkNointerlaced(sink, SN_index)
  * 
  *             for kyy in range(dims):             # <<<<<<<<<<<<<<
@@ -9065,7 +9081,7 @@ static PyObject *__pyx_pf_7pyFFTps_9PowerSpec_34Pk1D(CYTHON_UNUSED PyObject *__p
       for (__pyx_t_17 = 0; __pyx_t_17 < __pyx_t_16; __pyx_t_17+=1) {
         __pyx_v_kyy = __pyx_t_17;
 
-        /* "pyFFTps/PowerSpec.pyx":354
+        /* "pyFFTps/PowerSpec.pyx":355
  *             for kyy in range(dims):
  *             # for kyy in prange(dims, schedule='static'):
  *                 ky = (kyy-dims if (kyy>middle) else kyy)             # <<<<<<<<<<<<<<
@@ -9079,7 +9095,7 @@ static PyObject *__pyx_pf_7pyFFTps_9PowerSpec_34Pk1D(CYTHON_UNUSED PyObject *__p
         }
         __pyx_v_ky = __pyx_t_18;
 
-        /* "pyFFTps/PowerSpec.pyx":355
+        /* "pyFFTps/PowerSpec.pyx":356
  *             # for kyy in prange(dims, schedule='static'):
  *                 ky = (kyy-dims if (kyy>middle) else kyy)
  *                 sink = sin(prefact*ky)             # <<<<<<<<<<<<<<
@@ -9088,7 +9104,7 @@ static PyObject *__pyx_pf_7pyFFTps_9PowerSpec_34Pk1D(CYTHON_UNUSED PyObject *__p
  */
         __pyx_v_sink = sin((__pyx_v_prefact * __pyx_v_ky));
 
-        /* "pyFFTps/PowerSpec.pyx":356
+        /* "pyFFTps/PowerSpec.pyx":357
  *                 ky = (kyy-dims if (kyy>middle) else kyy)
  *                 sink = sin(prefact*ky)
  *                 MAS_corr[1] = MAS_correction(prefact*ky,MAS_index)             # <<<<<<<<<<<<<<
@@ -9097,7 +9113,7 @@ static PyObject *__pyx_pf_7pyFFTps_9PowerSpec_34Pk1D(CYTHON_UNUSED PyObject *__p
  */
         (__pyx_v_MAS_corr[1]) = __pyx_f_7pyFFTps_9PowerSpec_MAS_correction((__pyx_v_prefact * __pyx_v_ky), __pyx_v_MAS_index, 0);
 
-        /* "pyFFTps/PowerSpec.pyx":357
+        /* "pyFFTps/PowerSpec.pyx":358
  *                 sink = sin(prefact*ky)
  *                 MAS_corr[1] = MAS_correction(prefact*ky,MAS_index)
  *                 SN_corr0[1] = CkNointerlaced(sink, SN_index)             # <<<<<<<<<<<<<<
@@ -9106,7 +9122,7 @@ static PyObject *__pyx_pf_7pyFFTps_9PowerSpec_34Pk1D(CYTHON_UNUSED PyObject *__p
  */
         (__pyx_v_SN_corr0[1]) = __pyx_f_7pyFFTps_9PowerSpec_CkNointerlaced(__pyx_v_sink, __pyx_v_SN_index, 0);
 
-        /* "pyFFTps/PowerSpec.pyx":359
+        /* "pyFFTps/PowerSpec.pyx":360
  *                 SN_corr0[1] = CkNointerlaced(sink, SN_index)
  * 
  *                 for kzz in range(middle+1): #kzz=[0,1,..,middle] --> kz>0             # <<<<<<<<<<<<<<
@@ -9118,7 +9134,7 @@ static PyObject *__pyx_pf_7pyFFTps_9PowerSpec_34Pk1D(CYTHON_UNUSED PyObject *__p
         for (__pyx_t_18 = 0; __pyx_t_18 < __pyx_t_20; __pyx_t_18+=1) {
           __pyx_v_kzz = __pyx_t_18;
 
-          /* "pyFFTps/PowerSpec.pyx":361
+          /* "pyFFTps/PowerSpec.pyx":362
  *                 for kzz in range(middle+1): #kzz=[0,1,..,middle] --> kz>0
  *                 # for kzz in prange(middle+1, schedule='static'):
  *                     kz = (kzz-dims if (kzz>middle) else kzz)             # <<<<<<<<<<<<<<
@@ -9132,7 +9148,7 @@ static PyObject *__pyx_pf_7pyFFTps_9PowerSpec_34Pk1D(CYTHON_UNUSED PyObject *__p
           }
           __pyx_v_kz = __pyx_t_21;
 
-          /* "pyFFTps/PowerSpec.pyx":362
+          /* "pyFFTps/PowerSpec.pyx":363
  *                 # for kzz in prange(middle+1, schedule='static'):
  *                     kz = (kzz-dims if (kzz>middle) else kzz)
  *                     modefactor = 2             # <<<<<<<<<<<<<<
@@ -9141,27 +9157,27 @@ static PyObject *__pyx_pf_7pyFFTps_9PowerSpec_34Pk1D(CYTHON_UNUSED PyObject *__p
  */
           __pyx_v_modefactor = 2;
 
-          /* "pyFFTps/PowerSpec.pyx":363
+          /* "pyFFTps/PowerSpec.pyx":364
  *                     kz = (kzz-dims if (kzz>middle) else kzz)
  *                     modefactor = 2
  *                     if (kzz==middle) or (kzz==0) : modefactor = 1             # <<<<<<<<<<<<<<
  *                     sink = sin(prefact*kz)
  *                     MAS_corr[2] = MAS_correction(prefact*kz,MAS_index)
  */
-          __pyx_t_4 = ((__pyx_v_kzz == __pyx_v_middle) != 0);
-          if (!__pyx_t_4) {
+          __pyx_t_9 = ((__pyx_v_kzz == __pyx_v_middle) != 0);
+          if (!__pyx_t_9) {
           } else {
-            __pyx_t_9 = __pyx_t_4;
-            goto __pyx_L29_bool_binop_done;
+            __pyx_t_4 = __pyx_t_9;
+            goto __pyx_L30_bool_binop_done;
           }
-          __pyx_t_4 = ((__pyx_v_kzz == 0) != 0);
-          __pyx_t_9 = __pyx_t_4;
-          __pyx_L29_bool_binop_done:;
-          if (__pyx_t_9) {
+          __pyx_t_9 = ((__pyx_v_kzz == 0) != 0);
+          __pyx_t_4 = __pyx_t_9;
+          __pyx_L30_bool_binop_done:;
+          if (__pyx_t_4) {
             __pyx_v_modefactor = 1;
           }
 
-          /* "pyFFTps/PowerSpec.pyx":364
+          /* "pyFFTps/PowerSpec.pyx":365
  *                     modefactor = 2
  *                     if (kzz==middle) or (kzz==0) : modefactor = 1
  *                     sink = sin(prefact*kz)             # <<<<<<<<<<<<<<
@@ -9170,7 +9186,7 @@ static PyObject *__pyx_pf_7pyFFTps_9PowerSpec_34Pk1D(CYTHON_UNUSED PyObject *__p
  */
           __pyx_v_sink = sin((__pyx_v_prefact * __pyx_v_kz));
 
-          /* "pyFFTps/PowerSpec.pyx":365
+          /* "pyFFTps/PowerSpec.pyx":366
  *                     if (kzz==middle) or (kzz==0) : modefactor = 1
  *                     sink = sin(prefact*kz)
  *                     MAS_corr[2] = MAS_correction(prefact*kz,MAS_index)             # <<<<<<<<<<<<<<
@@ -9179,12 +9195,12 @@ static PyObject *__pyx_pf_7pyFFTps_9PowerSpec_34Pk1D(CYTHON_UNUSED PyObject *__p
  */
           (__pyx_v_MAS_corr[2]) = __pyx_f_7pyFFTps_9PowerSpec_MAS_correction((__pyx_v_prefact * __pyx_v_kz), __pyx_v_MAS_index, 0);
 
-          /* "pyFFTps/PowerSpec.pyx":366
+          /* "pyFFTps/PowerSpec.pyx":367
  *                     sink = sin(prefact*kz)
  *                     MAS_corr[2] = MAS_correction(prefact*kz,MAS_index)
  *                     SN_corr0[2] = CkNointerlaced(sink, SN_index)             # <<<<<<<<<<<<<<
  * 
- * 
+ *                     # compute |k| of the mode and its integer part
  */
           (__pyx_v_SN_corr0[2]) = __pyx_f_7pyFFTps_9PowerSpec_CkNointerlaced(__pyx_v_sink, __pyx_v_SN_index, 0);
 
@@ -9208,23 +9224,23 @@ static PyObject *__pyx_pf_7pyFFTps_9PowerSpec_34Pk1D(CYTHON_UNUSED PyObject *__p
           __Pyx_GOTREF(__pyx_t_1);
           __pyx_t_2 = PyObject_RichCompare(__pyx_t_1, __pyx_v_kmax, Py_GE); __Pyx_XGOTREF(__pyx_t_2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 371, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-          __pyx_t_4 = __Pyx_PyObject_IsTrue(__pyx_t_2); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 371, __pyx_L1_error)
+          __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_2); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 371, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-          if (!__pyx_t_4) {
+          if (!__pyx_t_9) {
           } else {
-            __pyx_t_9 = __pyx_t_4;
-            goto __pyx_L32_bool_binop_done;
+            __pyx_t_4 = __pyx_t_9;
+            goto __pyx_L33_bool_binop_done;
           }
           __pyx_t_2 = PyFloat_FromDouble(__pyx_v_k); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 371, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_2);
           __pyx_t_1 = PyObject_RichCompare(__pyx_t_2, __pyx_v_kmin, Py_LT); __Pyx_XGOTREF(__pyx_t_1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 371, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-          __pyx_t_4 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 371, __pyx_L1_error)
+          __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 371, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-          __pyx_t_9 = __pyx_t_4;
-          __pyx_L32_bool_binop_done:;
-          if (__pyx_t_9) {
-            goto __pyx_L26_continue;
+          __pyx_t_4 = __pyx_t_9;
+          __pyx_L33_bool_binop_done:;
+          if (__pyx_t_4) {
+            goto __pyx_L27_continue;
           }
 
           /* "pyFFTps/PowerSpec.pyx":373
@@ -9341,7 +9357,7 @@ static PyObject *__pyx_pf_7pyFFTps_9PowerSpec_34Pk1D(CYTHON_UNUSED PyObject *__p
  */
           __pyx_t_23 = __pyx_v_k_index;
           *((__pyx_t_5numpy_float64_t *) ( /* dim=0 */ ((char *) (((__pyx_t_5numpy_float64_t *) __pyx_v_Nmodes1D.data) + __pyx_t_23)) )) += (1.0 * __pyx_v_modefactor);
-          __pyx_L26_continue:;
+          __pyx_L27_continue:;
         }
       }
     }
@@ -9355,8 +9371,8 @@ static PyObject *__pyx_pf_7pyFFTps_9PowerSpec_34Pk1D(CYTHON_UNUSED PyObject *__p
  * 
  *     # Pk1D. Check modes, discard DC mode bin and give units
  */
-  __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_v_verbose); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 389, __pyx_L1_error)
-  if (__pyx_t_9) {
+  __pyx_t_4 = __Pyx_PyObject_IsTrue(__pyx_v_verbose); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 389, __pyx_L1_error)
+  if (__pyx_t_4) {
     __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_time); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 389, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_time); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 389, __pyx_L1_error)
@@ -9468,8 +9484,8 @@ static PyObject *__pyx_pf_7pyFFTps_9PowerSpec_34Pk1D(CYTHON_UNUSED PyObject *__p
  * 
  *     return np.asarray(k1D), np.asarray(Pk1D), np.asarray(Nmodes1D)
  */
-  __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_v_verbose); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 398, __pyx_L1_error)
-  if (__pyx_t_9) {
+  __pyx_t_4 = __Pyx_PyObject_IsTrue(__pyx_v_verbose); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 398, __pyx_L1_error)
+  if (__pyx_t_4) {
     __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_time); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 398, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_time); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 398, __pyx_L1_error)
@@ -9599,7 +9615,7 @@ static PyObject *__pyx_pf_7pyFFTps_9PowerSpec_34Pk1D(CYTHON_UNUSED PyObject *__p
  * @cython.wraparound(False)
  * def Pk1D(delta,BoxSize,MAS='CIC',threads=1, verbose=True,             # <<<<<<<<<<<<<<
  *          SNFlag=False, numeff=1.0, interlaced=False,
- *          kmin=0.0, kmax=None, kbin=10):
+ *          kmin=0.0, kmax=None, kbin=None):
  */
 
   /* function exit code */
@@ -9624,6 +9640,7 @@ static PyObject *__pyx_pf_7pyFFTps_9PowerSpec_34Pk1D(CYTHON_UNUSED PyObject *__p
   __Pyx_XDECREF(__pyx_v_start2);
   __Pyx_XDECREF(__pyx_v_kmin);
   __Pyx_XDECREF(__pyx_v_kmax);
+  __Pyx_XDECREF(__pyx_v_kbin);
   __Pyx_XGIVEREF(__pyx_r);
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
@@ -28114,7 +28131,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
 };
 static CYTHON_SMALL_CODE int __Pyx_InitCachedBuiltins(void) {
   __pyx_builtin_print = __Pyx_GetBuiltinName(__pyx_n_s_print); if (!__pyx_builtin_print) __PYX_ERR(0, 56, __pyx_L1_error)
-  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 293, __pyx_L1_error)
+  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 294, __pyx_L1_error)
   __pyx_builtin_ImportError = __Pyx_GetBuiltinName(__pyx_n_s_ImportError); if (!__pyx_builtin_ImportError) __PYX_ERR(1, 884, __pyx_L1_error)
   __pyx_builtin_ValueError = __Pyx_GetBuiltinName(__pyx_n_s_ValueError); if (!__pyx_builtin_ValueError) __PYX_ERR(2, 133, __pyx_L1_error)
   __pyx_builtin_MemoryError = __Pyx_GetBuiltinName(__pyx_n_s_MemoryError); if (!__pyx_builtin_MemoryError) __PYX_ERR(2, 148, __pyx_L1_error)
@@ -28209,14 +28226,14 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_GOTREF(__pyx_tuple__7);
   __Pyx_GIVEREF(__pyx_tuple__7);
 
-  /* "pyFFTps/PowerSpec.pyx":272
- *     MAS_index = MAS_function(MAS)
- *     if SNFlag:
- *         if verbose: print('Subtracting shotnoise from the field')             # <<<<<<<<<<<<<<
- *         SN_index = MAS_index
- *     else:
+  /* "pyFFTps/PowerSpec.pyx":293
+ *     start2 = time.time();  prefact = np.pi/dims
+ *     if interlaced and SNFlag:
+ *         if verbose: print('Subtracting shotnoise from the field in the interlaced case.')             # <<<<<<<<<<<<<<
+ *         for kxx in range(dims):
+ *             kx = (kxx-dims if (kxx>middle) else kxx)
  */
-  __pyx_tuple__8 = PyTuple_Pack(1, __pyx_kp_u_Subtracting_shotnoise_from_the_f); if (unlikely(!__pyx_tuple__8)) __PYX_ERR(0, 272, __pyx_L1_error)
+  __pyx_tuple__8 = PyTuple_Pack(1, __pyx_kp_u_Subtracting_shotnoise_from_the_f); if (unlikely(!__pyx_tuple__8)) __PYX_ERR(0, 293, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__8);
   __Pyx_GIVEREF(__pyx_tuple__8);
 
@@ -28606,7 +28623,7 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * @cython.wraparound(False)
  * def Pk1D(delta,BoxSize,MAS='CIC',threads=1, verbose=True,             # <<<<<<<<<<<<<<
  *          SNFlag=False, numeff=1.0, interlaced=False,
- *          kmin=0.0, kmax=None, kbin=10):
+ *          kmin=0.0, kmax=None, kbin=None):
  */
   __pyx_tuple__57 = PyTuple_Pack(47, __pyx_n_s_delta, __pyx_n_s_BoxSize, __pyx_n_s_MAS, __pyx_n_s_threads, __pyx_n_s_verbose, __pyx_n_s_SNFlag, __pyx_n_s_numeff, __pyx_n_s_interlaced, __pyx_n_s_kmin, __pyx_n_s_kmax, __pyx_n_s_kbin, __pyx_n_s_start, __pyx_n_s_kxx, __pyx_n_s_kyy, __pyx_n_s_kzz, __pyx_n_s_kx, __pyx_n_s_ky, __pyx_n_s_kz, __pyx_n_s_dims, __pyx_n_s_middle, __pyx_n_s_k_index, __pyx_n_s_MAS_index, __pyx_n_s_SN_index, __pyx_n_s_kmax_par, __pyx_n_s_k_par, __pyx_n_s_i, __pyx_n_s_modefactor, __pyx_n_s_k, __pyx_n_s_delta2, __pyx_n_s_prefact, __pyx_n_s_real, __pyx_n_s_imag, __pyx_n_s_kmaxper, __pyx_n_s_sink, __pyx_n_s_cosk, __pyx_n_s_dk, __pyx_n_s_MAS_corr, __pyx_n_s_MAS_factor, __pyx_n_s_SN_corr0, __pyx_n_s_SN_corr1, __pyx_n_s_SN_factor, __pyx_n_s_delta_k, __pyx_n_s_k1D, __pyx_n_s_Pk1D, __pyx_n_s_Nmodes1D, __pyx_n_s_kF, __pyx_n_s_start2); if (unlikely(!__pyx_tuple__57)) __PYX_ERR(0, 247, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__57);
@@ -28738,7 +28755,6 @@ if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 1, __pyx_L1_error)
   __pyx_int_3 = PyInt_FromLong(3); if (unlikely(!__pyx_int_3)) __PYX_ERR(0, 1, __pyx_L1_error)
   __pyx_int_4 = PyInt_FromLong(4); if (unlikely(!__pyx_int_4)) __PYX_ERR(0, 1, __pyx_L1_error)
   __pyx_int_8 = PyInt_FromLong(8); if (unlikely(!__pyx_int_8)) __PYX_ERR(0, 1, __pyx_L1_error)
-  __pyx_int_10 = PyInt_FromLong(10); if (unlikely(!__pyx_int_10)) __PYX_ERR(0, 1, __pyx_L1_error)
   __pyx_int_184977713 = PyInt_FromLong(184977713L); if (unlikely(!__pyx_int_184977713)) __PYX_ERR(0, 1, __pyx_L1_error)
   __pyx_int_neg_1 = PyInt_FromLong(-1); if (unlikely(!__pyx_int_neg_1)) __PYX_ERR(0, 1, __pyx_L1_error)
   return 0;
@@ -29341,7 +29357,7 @@ if (!__Pyx_RefNanny) {
  * @cython.wraparound(False)
  * def Pk1D(delta,BoxSize,MAS='CIC',threads=1, verbose=True,             # <<<<<<<<<<<<<<
  *          SNFlag=False, numeff=1.0, interlaced=False,
- *          kmin=0.0, kmax=None, kbin=10):
+ *          kmin=0.0, kmax=None, kbin=None):
  */
   __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_7pyFFTps_9PowerSpec_35Pk1D, NULL, __pyx_n_s_pyFFTps_PowerSpec); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 247, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);

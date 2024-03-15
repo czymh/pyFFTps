@@ -246,7 +246,7 @@ def IFFT2Dr_d(np.complex128_t[:,:] a, int threads):
 @cython.wraparound(False)
 def Pk1D(delta,BoxSize,MAS='CIC',threads=1, verbose=True, 
          SNFlag=False, numeff=1.0, interlaced=False, 
-         kmin=0.0, kmax=None, kbin=10):
+         kmin=0.0, kmax=None, kbin=None):
     start = time.time()
     cdef int kxx, kyy, kzz, kx, ky, kz,dims, middle, k_index, MAS_index, SN_index
     cdef int kmax_par, k_par, i, modefactor
@@ -269,7 +269,6 @@ def Pk1D(delta,BoxSize,MAS='CIC',threads=1, verbose=True,
     kF   = 2.0*np.pi/BoxSize
     MAS_index = MAS_function(MAS)
     if SNFlag:
-        if verbose: print('Subtracting shotnoise from the field')
         SN_index = MAS_index
     else:
         SN_index = 0
@@ -278,6 +277,7 @@ def Pk1D(delta,BoxSize,MAS='CIC',threads=1, verbose=True,
     delta_k = FFT3Dr_f(delta,threads)
     #################################
     if kmax is None:  kmax = middle*kF
+    if kbin is None:  kbin = middle + 1
 
     kmax = kmax/kF; kmin = kmin/kF
     # define Bins and arrays 
@@ -290,6 +290,7 @@ def Pk1D(delta,BoxSize,MAS='CIC',threads=1, verbose=True,
     # compute k,k_par,k_per, mu for each mode. k's are in kF units
     start2 = time.time();  prefact = np.pi/dims
     if interlaced and SNFlag:
+        if verbose: print('Subtracting shotnoise from the field in the interlaced case.')
         for kxx in range(dims):
             kx = (kxx-dims if (kxx>middle) else kxx)
             sink = sin(prefact*kx);  cosk = cos(prefact*kx)
@@ -330,7 +331,7 @@ def Pk1D(delta,BoxSize,MAS='CIC',threads=1, verbose=True,
                     SN_factor += SN_corr0[0]*SN_corr1[1]*SN_corr1[2]
                     SN_factor += SN_corr1[0]*SN_corr0[1]*SN_corr1[2]
                     SN_factor += SN_corr1[0]*SN_corr1[1]*SN_corr0[2]
-                    SN_factor /= numeff
+                    SN_factor  = SN_factor / numeff
 
                     # compute |delta_k|^2 of the mode
                     real = delta_k[kxx,kyy,kzz].real
@@ -364,7 +365,6 @@ def Pk1D(delta,BoxSize,MAS='CIC',threads=1, verbose=True,
                     sink = sin(prefact*kz)
                     MAS_corr[2] = MAS_correction(prefact*kz,MAS_index) 
                     SN_corr0[2] = CkNointerlaced(sink, SN_index) 
-
 
                     # compute |k| of the mode and its integer part
                     k       = sqrt(kx*kx + ky*ky + kz*kz)

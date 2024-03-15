@@ -16,6 +16,27 @@ def FLOAT_type():
     if sizeof(MASC.FLOAT)==4:  return np.float32
     else:                      return np.float64
 
+def Interlacing(MassAssign, pos, number, BoxSize, Nmesh, threads=1):
+    delta_k   = np.zeros((Nmesh,Nmesh,Nmesh//2+1),dtype=np.complex64)
+    karr      = np.fft.fftfreq(Nmesh,1.0/Nmesh).astype(np.float32) * np.pi / Nmesh 
+    karr[Nmesh//2] = Nmesh / 2 ## change the -Nmesh/2 to Nmesh/2 consistent with rfftfreq
+    karrz     = np.fft.rfftfreq(Nmesh,1.0/Nmesh).astype(np.float32) * np.pi / Nmesh 
+    karr      = np.sum(np.meshgrid(karr, karr, karrz), axis=0)
+    numberint = np.zeros_like(number)
+    MassAssign(pos,number,BoxSize)
+    #interlacing shift start
+    pos[:] = pos[:] + 0.5*BoxSize/Nmesh 
+    pos[pos>=BoxSize] -= BoxSize
+    pos[pos<0] += BoxSize
+    print(pos.min(),pos.max())
+    #interlacing shift end
+    MassAssign(pos,numberint,BoxSize)
+    delta_k[:]  = PS.FFT3Dr_f(numberint,threads)
+    delta_k[:]  = 0.5*delta_k[:]*np.exp(1j * karr[:])
+    delta_k[:]  = delta_k[:] + 0.5*PS.FFT3Dr_f(number,threads)
+    number[:]   = PS.IFFT3Dr_f(delta_k,threads)
+    del delta_k, numberint, karr
+
 ################################################################################
 ################################# ROUTINES #####################################
 #### from particle positions, with optional weights, to 3D density fields ####
@@ -41,43 +62,26 @@ cpdef void MA(pos, number, BoxSize, MAS='CIC', W=None, verbose=False,
     #number of coordinates to work in 2D or 3D
     coord,coord_aux = pos.shape[1], number.ndim
     if interlaced:
-        numberint = np.zeros_like(number)
         Nmesh     = number.shape[0]
-        karr      = np.fft.fftfreq(Nmesh,1.0/Nmesh).astype(np.float32) * BoxSize / Nmesh / 2
-        karrz     = np.fft.rfftfreq(Nmesh,1.0/Nmesh).astype(np.float32) * BoxSize / Nmesh / 2
-        karr      = np.sum(np.meshgrid(karr, karr, karrz), axis=0)
     # check that the number of dimensions match
     if coord!=coord_aux:
         print('pos have %d dimensions and the density %d!!!'%(coord,coord_aux))
         sys.exit()
-
     if verbose:
         if W is None:  print('\nUsing %s mass assignment scheme'%MAS)
         else:          print('\nUsing %s mass assignment scheme with weights'%MAS)
     start = time.time()
     if coord==3:
         if interlaced:
+            if verbose: print('Interlacing the density field')
             if   MAS=='NGP' and W is None:  
-                NGP(pos,number,BoxSize)
-                pos = pos + 0.5*BoxSize/Nmesh #interlacing shift
-                NGP(pos,numberint,BoxSize)
-                delta_k = PS.FFT3Dr_f(numberint,threads)
-                delta_k = 0.5*delta_k*np.exp(1j * karr)
-                delta_k += 0.5*PS.FFT3Dr_f(number,threads)
-                number = PS.IFFT3Dr_f(delta_k,threads)
-                del delta_k, numberint
-                
+                Interlacing(NGP, pos, number, BoxSize, Nmesh, threads)
             elif MAS=='CIC' and W is None:
-                CIC(pos,number,BoxSize)
-                pos = pos + 0.5*BoxSize/Nmesh #interlacing shift
-                CIC(pos,numberint,BoxSize)
-                delta_k  = PS.FFT3Dr_f(numberint,threads)
-                delta_k  = 0.5*delta_k*np.exp(1j * karr)
-                delta_k += 0.5*PS.FFT3Dr_f(number,threads)
-                number = PS.IFFT3Dr_f(delta_k,threads)
-                del delta_k, numberint
-            elif MAS=='TSC' and W is None:  TSC(pos,number,BoxSize)
-            elif MAS=='PCS' and W is None:  PCS(pos,number,BoxSize)
+                Interlacing(CIC, pos, number, BoxSize, Nmesh, threads)
+            elif MAS=='TSC' and W is None:  
+                Interlacing(TSC, pos, number, BoxSize, Nmesh, threads)
+            elif MAS=='PCS' and W is None:  
+                Interlacing(PCS, pos, number, BoxSize, Nmesh, threads)
             else:
                 print('option not valid!!!');  sys.exit()
         else:
