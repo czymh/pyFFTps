@@ -270,6 +270,8 @@ def Pk1D(delta,BoxSize,MAS='CIC',threads=1, verbose=True,
     MAS_index = MAS_function(MAS)
     if SNFlag:
         SN_index = MAS_index
+        print('SN_index = %d, '%SN_index, 'numden = %f h^3/Mpc^3.'%numeff)
+        numeff   = numeff * (BoxSize/dims**2)**3 ## change to grid unit
     else:
         SN_index = 0
 
@@ -293,15 +295,15 @@ def Pk1D(delta,BoxSize,MAS='CIC',threads=1, verbose=True,
         if verbose: print('Subtracting shotnoise from the field in the interlaced case.')
         for kxx in range(dims):
             kx = (kxx-dims if (kxx>middle) else kxx)
-            sink = sin(prefact*kx);  cosk = cos(prefact*kx)
-            MAS_corr[0] = MAS_correction(prefact*kx,MAS_index)
+            sink = sin(prefact*kx/2);  cosk = cos(prefact*kx/2)
+            MAS_corr[0] = MAS_correction(prefact*kx, MAS_index)
             SN_corr0[0] = Ckinterlaced_even(sink, cosk, SN_index)
             SN_corr1[0] = Ckinterlaced_odd (sink, SN_index)
         
             for kyy in range(dims):
                 ky = (kyy-dims if (kyy>middle) else kyy)
-                sink = sin(prefact*ky);  cosk = cos(prefact*ky)
-                MAS_corr[1] = MAS_correction(prefact*ky,MAS_index)
+                sink = sin(prefact*ky/2);  cosk = cos(prefact*ky/2)
+                MAS_corr[1] = MAS_correction(prefact*ky, MAS_index)
                 SN_corr0[1] = Ckinterlaced_even(sink, cosk, SN_index)
                 SN_corr1[1] = Ckinterlaced_odd (sink, SN_index)
 
@@ -309,8 +311,8 @@ def Pk1D(delta,BoxSize,MAS='CIC',threads=1, verbose=True,
                     kz = (kzz-dims if (kzz>middle) else kzz)
                     modefactor = 2
                     if (kzz==middle) or (kzz==0) : modefactor = 1
-                    sink = sin(prefact*kz);  cosk = cos(prefact*kz)
-                    MAS_corr[2] = MAS_correction(prefact*kz,MAS_index) 
+                    sink = sin(prefact*kz/2);  cosk = cos(prefact*kz/2)
+                    MAS_corr[2] = MAS_correction(prefact*kz, MAS_index) 
                     SN_corr0[2] = Ckinterlaced_even(sink, cosk, SN_index) 
                     SN_corr1[2] = Ckinterlaced_odd (sink, SN_index)
 
@@ -532,11 +534,11 @@ def XPk1D(delta0,delta1,BoxSize,MAS='CIC',threads=1, verbose=True, SNFlag=False,
                     MAS_corr[2] = MAS_correction(prefact*kz,MAS_index) 
                     SN_corr0[2] = CkNointerlaced(sink, SN_index)
 
-                    # kz=0 and kz=middle planes are special
-                    if kz==0 or (kz==middle and dims%2==0):
-                        if kx<0: continue
-                        elif kx==0 or (kx==middle and dims%2==0):
-                            if ky<0.0: continue
+                    # # kz=0 and kz=middle planes are special
+                    # if kz==0 or (kz==middle and dims%2==0):
+                    #     if kx<0: continue
+                    #     elif kx==0 or (kx==middle and dims%2==0):
+                    #         if ky<0.0: continue
 
                     # compute |k| of the mode and its integer part
                     k       = sqrt(kx*kx + ky*ky + kz*kz)

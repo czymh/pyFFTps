@@ -28,7 +28,6 @@ def Interlacing(MassAssign, pos, number, BoxSize, Nmesh, threads=1):
     pos[:] = pos[:] + 0.5*BoxSize/Nmesh 
     pos[pos>=BoxSize] -= BoxSize
     pos[pos<0] += BoxSize
-    print(pos.min(),pos.max())
     #interlacing shift end
     MassAssign(pos,numberint,BoxSize)
     delta_k[:]  = PS.FFT3Dr_f(numberint,threads)
