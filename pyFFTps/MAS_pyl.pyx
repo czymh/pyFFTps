@@ -16,25 +16,35 @@ def FLOAT_type():
     if sizeof(MASC.FLOAT)==4:  return np.float32
     else:                      return np.float64
 
-def Interlacing(MassAssign, pos, number, BoxSize, Nmesh, threads=1):
-    delta_k   = np.zeros((Nmesh,Nmesh,Nmesh//2+1),dtype=np.complex64)
-    karr      = np.fft.fftfreq(Nmesh,1.0/Nmesh).astype(np.float32) * np.pi / Nmesh 
-    karr[Nmesh//2] = Nmesh / 2 ## change the -Nmesh/2 to Nmesh/2 consistent with rfftfreq
-    karrz     = np.fft.rfftfreq(Nmesh,1.0/Nmesh).astype(np.float32) * np.pi / Nmesh 
-    karr      = np.sum(np.meshgrid(karr, karr, karrz), axis=0)
-    numberint = np.zeros_like(number)
+def Interlacing(MassAssign, pos_in, number, BoxSize, Nmesh, threads=1, order=2):
+    '''
+    order: int, default is 2
+        order of the equal-spacing interlacing scheme
+    '''
+    pos = np.copy(pos_in)
+
+    karr      = np.fft.fftfreq(Nmesh,1.0/Nmesh).astype(np.float32)  * 2 * np.pi / Nmesh 
+    karr[Nmesh//2] = np.pi / 2 ## change the -Nmesh/2 to Nmesh/2 consistent with rfftfreq
+    karrz     = np.fft.rfftfreq(Nmesh,1.0/Nmesh).astype(np.float32) * 2 * np.pi / Nmesh 
+    karr      = np.sum(np.meshgrid(karr, karr, karrz, indexing='ij'), axis=0)
     MassAssign(pos,number,BoxSize)
-    #interlacing shift start
-    pos[:] = pos[:] + 0.5*BoxSize/Nmesh 
-    pos[pos>=BoxSize] -= BoxSize
-    pos[pos<0] += BoxSize
-    #interlacing shift end
-    MassAssign(pos,numberint,BoxSize)
-    delta_k[:]  = PS.FFT3Dr_f(numberint,threads)
-    delta_k[:]  = 0.5*delta_k[:]*np.exp(1j * karr[:])
-    delta_k[:]  = delta_k[:] + 0.5*PS.FFT3Dr_f(number,threads)
+    delta_k   = np.zeros((Nmesh,Nmesh,Nmesh//2+1),dtype=np.complex64)
+    delta_k[:]  = 1/order*PS.FFT3Dr_f(number,threads)
+    
+    numberint = np.zeros((order-1), dtype=object)
+    for i in range(order-1):
+        numberint[i] = np.zeros_like(number)
+        shift = (i+1)/order
+        #interlacing shift start
+        # pos[:] = pos_in[:] + shift*BoxSize/Nmesh 
+        pos[:] = pos[:] + 1/order*BoxSize/Nmesh
+        pos[pos>=BoxSize] -= BoxSize
+        pos[pos<0] += BoxSize
+        #interlacing shift end
+        MassAssign(pos,numberint[i],BoxSize)
+        delta_k[:] += 1/order*PS.FFT3Dr_f(numberint[i], threads)*np.exp(1j * karr[:] * shift)
     number[:]   = PS.IFFT3Dr_f(delta_k,threads)
-    del delta_k, numberint, karr
+    del delta_k, numberint, karr, pos
 
 ################################################################################
 ################################# ROUTINES #####################################
@@ -57,7 +67,7 @@ def Interlacing(MassAssign, pos, number, BoxSize, Nmesh, threads=1):
 # subfiles, the normalization factor /2.0, /3.0, /4.0 should be added manually
 # only at the end, otherwise the results will be incorrect!!
 cpdef void MA(pos, number, BoxSize, MAS='CIC', W=None, verbose=False,
-              renormalize_2D=True, interlaced=False, threads=1):
+              renormalize_2D=True, interlaced=False, threads=1, order=2):
     #number of coordinates to work in 2D or 3D
     coord,coord_aux = pos.shape[1], number.ndim
     if interlaced:
@@ -74,13 +84,13 @@ cpdef void MA(pos, number, BoxSize, MAS='CIC', W=None, verbose=False,
         if interlaced:
             if verbose: print('Interlacing the density field')
             if   MAS=='NGP' and W is None:  
-                Interlacing(NGP, pos, number, BoxSize, Nmesh, threads)
+                Interlacing(NGP, pos, number, BoxSize, Nmesh, threads, order=order)
             elif MAS=='CIC' and W is None:
-                Interlacing(CIC, pos, number, BoxSize, Nmesh, threads)
+                Interlacing(CIC, pos, number, BoxSize, Nmesh, threads, order=order)
             elif MAS=='TSC' and W is None:  
-                Interlacing(TSC, pos, number, BoxSize, Nmesh, threads)
+                Interlacing(TSC, pos, number, BoxSize, Nmesh, threads, order=order)
             elif MAS=='PCS' and W is None:  
-                Interlacing(PCS, pos, number, BoxSize, Nmesh, threads)
+                Interlacing(PCS, pos, number, BoxSize, Nmesh, threads, order=order)
             else:
                 print('option not valid!!!');  sys.exit()
         else:
