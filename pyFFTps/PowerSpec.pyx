@@ -309,8 +309,13 @@ def Pk1D(delta,BoxSize,MAS='CIC',threads=1, verbose=True,
 
                 for kzz in range(middle+1): #kzz=[0,1,..,middle] --> kz>0
                     kz = (kzz-dims if (kzz>=middle) else kzz)
-                    modefactor = 2
-                    if (kzz==middle) or (kzz==0) : modefactor = 1
+                    # modefactor = 2
+                    # if (kzz==middle) or (kzz==0) : modefactor = 1
+                    ### for symmetrical FFT grid (Nmesh + 1)**3
+                    modefactor = 1 if (kzz == 0) else 2
+                    if kxx == middle: modefactor *= 2
+                    if kyy == middle: modefactor *= 2
+
                     sink = sin(prefact*kz/2);  cosk = cos(prefact*kz/2)
                     MAS_corr[2] = MAS_correction(prefact*kz, MAS_index) 
                     SN_corr0[2] = Ckinterlaced_even(sink, cosk, SN_index) 
@@ -362,8 +367,13 @@ def Pk1D(delta,BoxSize,MAS='CIC',threads=1, verbose=True,
                 for kzz in range(middle+1): #kzz=[0,1,..,middle] --> kz>0
                 # for kzz in prange(middle+1, schedule='static'):
                     kz = (kzz-dims if (kzz>=middle) else kzz)
-                    modefactor = 2
-                    if (kzz==middle) or (kzz==0) : modefactor = 1
+                    # modefactor = 2
+                    # if (kzz==middle) or (kzz==0) : modefactor = 1
+                    ### for symmetrical FFT grid (Nmesh + 1)**3
+                    modefactor = 1 if (kzz == 0) else 2
+                    if kxx == middle: modefactor *= 2
+                    if kyy == middle: modefactor *= 2
+
                     sink = sin(prefact*kz)
                     MAS_corr[2] = MAS_correction(prefact*kz,MAS_index) 
                     SN_corr0[2] = CkNointerlaced(sink, SN_index) 
@@ -493,8 +503,13 @@ def XPk1D(delta0,delta1,BoxSize,MAS='CIC',threads=1, verbose=True,
 
                 for kzz in range(middle+1): #kzz=[0,1,..,middle] --> kz>0
                     kz = (kzz-dims if (kzz>=middle) else kzz)
-                    modefactor = 2
-                    if (kzz==middle) or (kzz==0) : modefactor = 1
+                    # modefactor = 2
+                    # if (kzz==middle) or (kzz==0) : modefactor = 1
+                    ### for symmetrical FFT grid (Nmesh + 1)**3
+                    modefactor = 1 if (kzz == 0) else 2
+                    if kxx == middle: modefactor *= 2
+                    if kyy == middle: modefactor *= 2
+
                     sink = sin(prefact*kz/2);  cosk = cos(prefact*kz/2)
                     MAS_corr[2] = MAS_correction(prefact*kz, MAS_index) 
                     SN_corr0[2] = Ckinterlaced_even(sink, cosk, SN_index) 
@@ -548,9 +563,13 @@ def XPk1D(delta0,delta1,BoxSize,MAS='CIC',threads=1, verbose=True,
                 for kzz in range(middle+1): #kzz=[0,1,..,middle] --> kz>0
                 # for kzz in prange(middle+1, schedule='static'):
                     kz = (kzz-dims if (kzz>=middle) else kzz)
-                    modefactor = 2
-                    if (kzz==middle) or (kzz==0) : modefactor = 1
-
+                    # modefactor = 2
+                    # if (kzz==middle) or (kzz==0) : modefactor = 1
+                    ### for symmetrical FFT grid (Nmesh + 1)**3
+                    modefactor = 1 if (kzz == 0) else 2
+                    if kxx == middle: modefactor *= 2
+                    if kyy == middle: modefactor *= 2
+                    
                     sink = sin(prefact*kz)
                     MAS_corr[2] = MAS_correction(prefact*kz,MAS_index) 
                     SN_corr0[2] = CkNointerlaced(sink, SN_index) 
