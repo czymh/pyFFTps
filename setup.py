@@ -25,6 +25,9 @@ extensions = [
 
 setup(
     name='pyFFTps',
+    version='1.0.0',
+    author='Zhao Chen',
+    author_email='chiyiru@sjtu.edu.cn',
     packages=find_packages(),  # automatically find all packages
     ext_modules=cythonize(extensions,
                           compiler_directives={'language_level' : "3"}),  
